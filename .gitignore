@@ -1,0 +1,27 @@
+# ---- .NET ----
+bin/
+obj/
+*.user
+TestResults/
+.vs/
+
+# ---- Node ----
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+coverage/
+
+# Yarn: Zero-Installs are off, so the cache and install state stay out of git.
+**/.yarn/*
+!**/.yarn/patches
+!**/.yarn/plugins
+!**/.yarn/releases
+!**/.yarn/versions
+.pnp.*
+
+# ---- Tooling / OS ----
+.env
+.env.local
+.idea/
+.DS_Store
