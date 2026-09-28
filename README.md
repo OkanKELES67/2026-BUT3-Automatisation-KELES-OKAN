@@ -108,3 +108,45 @@ Coverage: `dotnet test -- --coverage` and `yarn test:coverage`.
 | --- | --- | --- |
 | `VITE_API_BASE_URL` | empty (same origin) | Absolute base URL of the API |
 | `VITE_DEV_API_PROXY` | `http://localhost:5000` | Where `yarn dev` proxies `/api` |
+
+
+
+### TP1 REPONSE
+
+1) le nom de l'image et son tag : tp-api:tp1   5885d48fb95a
+
+2) api est résolu par le DNS interne de Docker Compose : les conteneurs d’un même réseau peuvent se joindre par nom de service. Il n’est donc pas nécessaire que api existe comme nom sur la machine hôte.
+
+3) try_files $uri $uri/ /index.html sert le fichier demandé s’il existe, sinon renvoie index.html pour laisser le routeur de l’application gérer l’URL. Sans ce fallback, recharger /tasks ferait chercher un fichier ou dossier /tasks côté Nginx et aboutirait généralement à une erreur 404.
+
+
+
+### TP2 REPONSE
+
+### Mesures initiales (images du TP1)
+
+| Image | Taille |
+| --- | ---: |
+| `tp-api:tp1` | 2,01 Go |
+| `tp-front:tp1` | 452 Mo |
+
+### Mesures de reconstruction
+
+Durées mesurées avec `time docker build` :
+
+| Application | Reconstruction complète (`--no-cache`) | Après un changement d'espace dans le code |
+| --- | ---: | ---: |
+| API (`tp-api:mesure`) | 1 min 47,787 s | 1 min 21,227 s |
+| Front (`tp-front:mesure`) | 1 min 50,583 s | 1 min 46,331 s |
+
+### Utilisateurs des conteneurs
+
+- API : `uid=0(root) gid=0(root)`.
+- Frontend : `uid=0(root) gid=0(root)` (groupes supplémentaires : `root`, `bin`, `daemon`, `sys`, `adm`, `disk`, `wheel`, `floppy`, `dialout`, `tape`).
+
+
+
+
+real    0m0,639s
+user    0m0,178s
+sys     0m0,067s
