@@ -674,6 +674,11 @@
         "resolved": "1.4.2",
         "contentHash": "yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A=="
       },
+      "SixLabors.ImageSharp": {
+        "type": "Transitive",
+        "resolved": "3.1.6",
+        "contentHash": "dHQ5jugF9v+5/LCVHCWVzaaIL6WOehqJy6eju/0VFYFPEj2WtqkGPoEV9EVQP83dHsdoqYaTuWpZdwAd37UwfA=="
+      },
       "SSH.NET": {
         "type": "Transitive",
         "resolved": "2026.0.0",
@@ -923,6 +928,7 @@
         "type": "Project",
         "dependencies": {
           "ServiceStack.OrmLite.MySql": "[10.1.4, )",
+          "SixLabors.ImageSharp": "[3.1.6, )",
           "Storm.Api": "[10.0.19, )",
           "Storm.Api.Dtos": "[10.0.19, )"
         }

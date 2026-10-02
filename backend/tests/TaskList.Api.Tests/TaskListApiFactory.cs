@@ -19,7 +19,7 @@ namespace TaskList.Api.Tests;
 /// </summary>
 public class TaskListApiFactory : IAsyncLifetime
 {
-	private const string TestDatabaseName = "tasklist_tests";
+	private const string TEST_DATABASE_NAME = "tasklist_tests";
 
 	private IHost _host = null!;
 
