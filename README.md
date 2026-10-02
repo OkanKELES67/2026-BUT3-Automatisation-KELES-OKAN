@@ -164,4 +164,4 @@ Cette option est un compromis temporaire : elle n’ajoute pas les tests manquan
 
 La référence à `SixLabors.ImageSharp` 3.1.6 est volontairement vulnérable et sert à vérifier que l’audit NuGet fait échouer le job ; elle ne doit pas être conservée dans une version de production.
 
-ignore-unfixed: true   pour moi n'ai pas  une bonne idee il vaudrait mieux corriger les  vulnerabiliter 
+ignore-unfixed: true   pour moi n'ai pas  une bonne idee il vaudrait mieux corriger les  vulnerabiliter  mais il sert a eviter les faux bloquage 
