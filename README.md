@@ -150,3 +150,18 @@ Durées mesurées avec `time docker build` :
 real    0m0,639s
 user    0m0,178s
 sys     0m0,067s
+
+
+
+### TP3 REPONSE
+
+le lint a signalé un bug potentiel. L’effet ne suivait pas error.message
+
+
+Pour la quality gate de couverture, j’ai choisi l’option B. Les tests actuels couvrent 34,65 % des lignes : le seuil minimal est donc fixé à 34 %, le seuil entier immédiatement inférieur, afin que le workflow puisse réussir sans masquer le niveau de couverture réel. Ce seuil sert de cliquet : il devra augmenter avec les nouveaux tests et ne pas être baissé pour faire passer une régression.
+
+Cette option est un compromis temporaire : elle n’ajoute pas les tests manquants et ne distingue pas le code ancien du code nouveau. L’option A éliminerait la dette plus directement, tandis que l’option C serait plus adaptée à long terme mais disproportionnée pour ce dépôt.
+
+La référence à `SixLabors.ImageSharp` 3.1.6 est volontairement vulnérable et sert à vérifier que l’audit NuGet fait échouer le job ; elle ne doit pas être conservée dans une version de production.
+
+ignore-unfixed: true   pour moi n'ai pas  une bonne idee il vaudrait mieux corriger les  vulnerabiliter 

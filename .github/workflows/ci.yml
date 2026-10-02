@@ -1,4 +1,7 @@
 name: CI
+ 
+permissions:
+  contents: read
 
 on:
   push:
@@ -23,11 +26,28 @@ jobs:
       - name: Restaurer les dépendances
         run: dotnet restore
 
+      - name: Vérifier le formatage
+        run: dotnet format api.slnx --verify-no-changes
+
       - name: Compiler
         run: dotnet build --no-restore
 
-      - name: Tester
-        run: dotnet test --no-build --verbosity normal
+      - name: Tester avec couverture
+        run: dotnet test --no-build --verbosity normal --coverage --coverage-output-format cobertura
+
+      - name: Résumé de couverture
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          badge: true
+          filename: ./**/*.cobertura.xml
+          fail_below_min: true
+          thresholds: '34 80'
+          format: markdown
+          output: both
+
+      - name: Ajouter au résumé du run
+        if: always()
+        run: cat ../code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v4
         with:
@@ -57,6 +77,9 @@ jobs:
       - name: Installer les dépendances
         run: yarn install --frozen-lockfile
 
+      - name: Lint
+        run: yarn run lint
+
       - name: Construire
         run: yarn build
 
@@ -68,3 +91,47 @@ jobs:
           name : frontend-artifacts
           path : frontend/dist
           if: always()
+
+  securite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Audit npm
+        working-directory: ./frontend
+        run: corepack enable && yarn npm audit --severity high
+
+      - name: Audit NuGet
+        run: |
+          set -o pipefail
+          dotnet list backend/api.slnx package --vulnerable --include-transitive | tee /tmp/nuget-audit.txt
+          if grep -Eqi '(^|[[:space:]])(Critical|High|Moderate|Low)([[:space:]]|$)' /tmp/nuget-audit.txt; then
+            echo "Des packages NuGet vulnérables ont été détectés." >&2
+            exit 1
+          fi
+
+      - name: Construire l'image API
+        run: docker build -t api:scan ./backend
+
+      - name: Scanner l'image API
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'api:scan'
+          severity: 'CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Construire l'image Web
+        run: docker build -t web:scan ./frontend
+
+      - name: Scanner l'image Web
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'web:scan'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
